@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOMÉNICA CHICA — Diseñadora Gráfica | Portafolio 2026</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  <!-- Tipografías editoriales de alto contraste y precisión grotesca -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#070707',
+            charcoal: '#111111',
+            graphite: '#1E1E1E',
+            crimson: '#D91A2A',
+            crimsonDark: '#9E111D',
+            offwhite: '#F5F5F3',
+            ash: '#8C8C8C',
+          },
+          fontFamily: {
+            display: ['Syne', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          },
+          letterSpacing: {
+            editorial: '0.22em',
+            ultra: '0.35em',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Reglas editoriales de precisión y scrollbar minimalista */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #070707;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2b2b2b;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #D91A2A;
+    }
+
+    /* Animaciones de revelado editorial al hacer scroll */
+    .reveal-section {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-section.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Textura sutil de grano editorial */
+    .editorial-grain {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    /* Subrayado editorial animado */
+    .editorial-link {
+      position: relative;
+      display: inline-block;
+    }
+    .editorial-link::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0%;
+      height: 1.5px;
+      background-color: #D91A2A;
+      transition: width 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .editorial-link:hover::after {
+      width: 100%;
+    }
+
+    /* Contenedores de imagen editables (permite subir o reemplazar fotos al instante) */
+    .editable-slot:hover .slot-overlay {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body class="bg-obsidian text-offwhite font-sans antialiased selection:bg-crimson selection:text-white overflow-x-hidden">
+
+  <!-- NAVEGACIÓN FIJA EDITORIAL -->
+  <header class="fixed top-0 left-0 right-0 z-40 bg-obsidian/90 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8 h-16 sm:h-20 flex items-center justify-between">
+      <!-- Marca / Índice superior -->
+      <a href="#inicio" class="flex items-center gap-3 group">
+        <span class="w-2.5 h-2.5 rounded-full bg-crimson group-hover:scale-125 transition-transform"></span>
+        <span class="font-display font-bold tracking-wider text-xs sm:text-sm uppercase text-offwhite">
+          DOMÉNICA CHICA
+        </span>
+        <span class="hidden md:inline-block text-[11px] font-mono text-ash border-l border-white/15 pl-3">
+          PORTAFOLIO / 2026
+        </span>
+      </a>
+
+      <!-- Enlaces de navegación (4 secciones exactas) -->
+      <nav aria-label="Navegación principal" class="hidden md:flex items-center gap-8 text-xs uppercase tracking-editorial text-ash">
+        <a href="#inicio" class="editorial-link hover:text-offwhite transition-colors py-1">01. Inicio</a>
+        <a href="#acerca" class="editorial-link hover:text-offwhite transition-colors py-1">02. Acerca de mí</a>
+        <a href="#proyectos" class="editorial-link hover:text-offwhite transition-colors py-1">03. Proyectos</a>
+        <a href="#hobbies" class="editorial-link hover:text-offwhite transition-colors py-1">04. My Hobbies</a>
+      </nav>
+
+      <!-- Botón de acción rápida + menú móvil -->
+      <div class="flex items-center gap-3">
+        <button id="mobileMenuBtn" type="button" aria-label="Abrir menú" class="md:hidden p-2.5 rounded-lg border border-white/15 text-offwhite hover:border-crimson">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h10" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Menú móvil desplegable -->
+    <div id="mobileMenu" class="hidden md:hidden bg-charcoal border-b border-white/15 px-6 py-5 space-y-4">
+      <a href="#inicio" class="block text-xs uppercase tracking-editorial text-offwhite hover:text-crimson py-1.5">01 — Inicio / Portada</a>
+      <a href="#acerca" class="block text-xs uppercase tracking-editorial text-offwhite hover:text-crimson py-1.5">02 — Acerca de mí</a>
+      <a href="#proyectos" class="block text-xs uppercase tracking-editorial text-offwhite hover:text-crimson py-1.5">03 — Proyectos</a>
+      <a href="#hobbies" class="block text-xs uppercase tracking-editorial text-offwhite hover:text-crimson py-1.5">04 — My Hobbies</a>
+    </div>
+  </header>
+
+  <!-- NOTIFICACIÓN FLOTANTE (Reemplazo elegante para alert) -->
+  <div id="toastBanner" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden bg-charcoal border border-crimson/70 text-offwhite px-5 py-3 rounded-full shadow-2xl text-xs tracking-wide flex items-center gap-3">
+    <span class="w-2 h-2 rounded-full bg-crimson animate-pulse"></span>
+    <span id="toastText">Mensaje del sistema</span>
+  </div>
+
+  <main>
+    <!-- ===================================================================== -->
+    <!-- SECCIÓN 01: INICIO / DATOS GENERALES (PORTADA EDITORIAL)              -->
+    <!-- ===================================================================== -->
+    <section id="inicio" class="relative min-h-screen pt-24 sm:pt-28 pb-16 px-4 sm:px-8 border-b border-white/10 editorial-grain flex flex-col justify-between overflow-hidden">
+      <!-- Contenedor del canvas generativo p5.js adaptado a la identidad cromática -->
+      <div id="p5-hero-container" class="pointer-events-none absolute inset-0 z-0 opacity-30"></div>
+      <!-- Degradado de contraste editorial para garantizar legibilidad absoluta -->
+      <div class="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-obsidian/80 via-obsidian/70 to-obsidian"></div>
+
+      <!-- Líneas guía verticales de retícula editorial -->
+      <div class="pointer-events-none absolute inset-0 z-0 max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-4 border-x border-white/[0.04]">
+        <div class="border-r border-white/[0.04]"></div>
+        <div class="border-r border-white/[0.04]"></div>
+        <div class="border-r border-white/[0.04]"></div>
+        <div></div>
+      </div>
+
+      <div class="relative z-10 max-w-7xl mx-auto w-full">
+        <!-- Barra superior editorial con edición, año y disciplina -->
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/15 text-[11px] uppercase tracking-editorial text-ash">
+          <div class="flex items-center gap-3">
+            <span class="px-2.5 py-1 bg-crimson text-white font-semibold rounded-sm">EDICIÓN 2026</span>
+            <span>CUENCA — ECUADOR</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span>VISUAL COMMUNICATION</span>
+            <span class="text-offwhite font-mono">N.º 01 / PORTADA</span>
+          </div>
+        </div>
+
+        <!-- Composición Asimétrica Principal -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 pt-8 sm:pt-12 items-end">
+          
+          <!-- Columna Izquierda: Tipografía Monumental y Frase -->
+          <div class="lg:col-span-7 flex flex-col justify-between space-y-8">
+            <div>
+              <p class="text-crimson font-mono text-xs sm:text-sm uppercase tracking-ultra mb-4 flex items-center gap-3">
+                <span class="inline-block w-8 h-[1.5px] bg-crimson"></span>
+                Diseñadora gráfica
+              </p>
+
+              <h1 class="font-display font-extrabold uppercase leading-[0.92] tracking-tight text-offwhite text-4xl sm:text-6xl md:text-7xl xl:text-[5rem]">
+                DOMÉNICA<br />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-offwhite via-offwhite to-ash">CHICA</span><span class="text-crimson">.</span>
+              </h1>
+            </div>
+
+            <!-- Bloque de cita editorial sobre diseño y creatividad -->
+            <div class="max-w-xl border-l-2 border-crimson pl-5 py-1 space-y-3">
+              <p class="font-serif italic text-lg sm:text-2xl text-offwhite/95 leading-snug">
+                “El diseño es el punto de encuentro donde una idea encuentra su forma más honesta, funcional y memorable.”
+              </p>
+              <p class="text-[11px] uppercase tracking-editorial text-ash">
+                DIRECCIÓN DE ARTE · IDENTIDAD VISUAL · EDITORIAL
+              </p>
+            </div>
+
+            <!-- Bloque de Contacto Directo e Interactivo -->
+            <div class="pt-4 border-t border-white/15 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div class="bg-charcoal/80 border border-white/10 rounded-xl p-3.5 hover:border-crimson/60 transition-colors">
+                <span class="block text-[10px] uppercase tracking-editorial text-ash mb-1">Correo electrónico</span>
+                <div class="flex items-center justify-between gap-2">
+                  <a href="mailto:domenicachica@gmail.com" id="emailLink" class="text-offwhite font-medium truncate hover:text-crimson transition-colors">
+                    domenicachica@gmail.com
+                  </a>
+                  <button type="button" onclick="copyContact('domenicachica@gmail.com', 'Correo copiado al portapapeles')" class="text-ash hover:text-white p-1" title="Copiar correo">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="bg-charcoal/80 border border-white/10 rounded-xl p-3.5 hover:border-crimson/60 transition-colors">
+                <span class="block text-[10px] uppercase tracking-editorial text-ash mb-1">Instagram</span>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="text-offwhite font-medium hover:text-crimson transition-colors flex items-center justify-between">
+                  <span>@domenicachica.design</span>
+                  <span class="text-crimson text-sm">↗</span>
+                </a>
+              </div>
+
+              <div class="bg-charcoal/80 border border-white/10 rounded-xl p-3.5 hover:border-crimson/60 transition-colors">
+                <span class="block text-[10px] uppercase tracking-editorial text-ash mb-1">Teléfono</span>
+                <div class="flex items-center justify-between gap-2">
+                  <a href="tel:+593998368387" class="text-offwhite font-medium hover:text-crimson transition-colors">
+                    +593 99 836 8682
+                  </a>
+                  <button type="button" onclick="copyContact('+593 99 836 8682', 'Teléfono copiado al portapapeles')" class="text-ash hover:text-white p-1" title="Copiar teléfono">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna Derecha: Fotografía Protagonista (Mi foto.png / Mi foto.jpg) -->
+          <div class="lg:col-span-5 relative">
+            <!-- Acento geométrico rojo detrás del retrato -->
+            <div class="hidden sm:block absolute -top-4 -right-4 w-32 h-32 border-t-2 border-r-2 border-crimson pointer-events-none"></div>
+            <div class="hidden sm:block absolute -bottom-4 -left-4 w-24 h-24 bg-crimson/20 rounded-2xl blur-xl pointer-events-none"></div>
+
+            <div class="editable-slot relative rounded-2xl overflow-hidden bg-obsidian border border-white/15 shadow-2xl group aspect-[4/5]">
+              <!-- Se intenta cargar Mi foto.png y con respaldo automático a Mi foto.jpg o espacio editable -->
+              <img
+                id="img-hero"
+                src="Mi foto.png"
+                onerror="if(!this.dataset.triedJpg){this.dataset.triedJpg='1';this.src='Mi foto.jpg';}else{this.style.display='none';document.getElementById('placeholder-hero').classList.remove('hidden');}"
+                alt="Doménica Chica — Diseñadora Gráfica"
+                class="w-full h-full object-cover object-top grayscale-[15%] contrast-110 group-hover:scale-[1.02] transition-transform duration-700"
+              />
+
+              <!-- Espacio preparado editable si la ruta local aún no está vinculada -->
+              <div id="placeholder-hero" class="hidden w-full h-full flex flex-col items-center justify-center p-8 text-center bg-gradient-to-b from-charcoal to-obsidian">
+                <div class="w-16 h-16 rounded-full border border-crimson/60 flex items-center justify-center mb-4 text-crimson font-display font-bold text-xl">
+                  DC
+                </div>
+                <p class="font-display text-sm uppercase tracking-editorial text-offwhite mb-2">Mi foto.png</p>
+                <p class="text-xs text-ash max-w-xs mb-5">Espacio reservado para tu fotografía principal de portada en fondo oscuro editorial.</p>
+                <button type="button" onclick="triggerUpload('img-hero', 'placeholder-hero')" class="px-4 py-2 bg-crimson text-white text-xs uppercase tracking-wider rounded-full hover:bg-crimsonDark transition-colors">
+                  Seleccionar Mi foto.png
+                </button>
+              </div>
+
+              <!-- Etiqueta editorial superpuesta en la base -->
+              <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-obsidian via-obsidian/80 to-transparent p-5 flex items-end justify-between">
+                <div>
+                  <span class="text-[10px] font-mono uppercase tracking-editorial text-crimson block">PORTFOLIO COVER</span>
+                  <span class="text-xs font-medium text-offwhite">Doménica Chica · 2026</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECCIÓN 02: ACERCA DE MÍ                                              -->
+    <!-- ===================================================================== -->
+    <section id="acerca" class="reveal-section py-24 sm:py-32 px-4 sm:px-8 border-b border-white/10 bg-charcoal/40">
+      <div class="max-w-7xl mx-auto">
+        <!-- Encabezado Editorial de Sección -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-white/15">
+          <div>
+            <span class="text-crimson font-mono text-xs uppercase tracking-ultra block mb-3">02 / PERFIL PROFESIONAL</span>
+            <h2 class="font-display font-extrabold text-4xl sm:text-6xl uppercase tracking-tight text-offwhite">
+              ACERCA DE MÍ<span class="text-crimson">.</span>
+            </h2>
+          </div>
+          <p class="text-xs uppercase tracking-editorial text-ash max-w-xs">
+            IDENTIDAD · FORMACIÓN ACADÉMICA · HERRAMIENTAS Y COMPETENCIAS VISUALES
+          </p>
+        </div>
+
+        <!-- Retícula Asimétrica de Contenido -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 pt-12">
+          
+          <!-- Columna Izquierda (7 cols): Declaración Personal y Formación -->
+          <div class="lg:col-span-7 space-y-12">
+            <!-- Texto exacto solicitado -->
+            <div class="bg-obsidian border border-white/10 rounded-2xl p-7 sm:p-10 relative overflow-hidden">
+              <span class="absolute top-6 right-7 font-serif text-7xl text-crimson/20 leading-none select-none">“</span>
+              <p class="text-lg sm:text-2xl font-light text-offwhite leading-relaxed relative z-10">
+                Soy <strong class="font-semibold text-white">Doménica Chica</strong>, estudiante de Diseño Gráfico, apasionada por la creatividad y la comunicación visual. Me interesa desarrollar proyectos que combinen estética, funcionalidad y concepto, buscando crear soluciones visuales que conecten de manera efectiva con las personas.
+              </p>
+              <div class="mt-8 pt-6 border-t border-white/10 flex items-center justify-between text-xs text-ash font-mono">
+                <span>DOMÉNICA CHICA</span>
+                <span class="text-crimson">DISEÑO GRÁFICO · 2026</span>
+              </div>
+            </div>
+
+            <!-- Formación Académica -->
+            <div class="border-l-2 border-crimson pl-6 sm:pl-8 space-y-3">
+              <div class="flex items-center gap-3">
+                <span class="px-2.5 py-0.5 bg-white/10 text-offwhite font-mono text-[11px] rounded">FORMACIÓN ACADÉMICA</span>
+                <span class="text-xs text-crimson font-mono">EN CURSO</span>
+              </div>
+              <h3 class="font-display font-bold text-xl sm:text-2xl text-offwhite uppercase">
+                Universidad del Azuay
+              </h3>
+              <p class="text-sm sm:text-base text-offwhite/80 leading-relaxed max-w-2xl">
+                Actualmente estudio Diseño Gráfico en la Universidad del Azuay, donde he desarrollado conocimientos en diferentes áreas del diseño y la comunicación visual.
+              </p>
+            </div>
+          </div>
+
+          <!-- Columna Derecha (5 cols): Software y Habilidades -->
+          <div class="lg:col-span-5 space-y-8">
+            
+            <!-- Bloque Software -->
+            <div class="bg-obsidian border border-white/10 rounded-2xl p-6 sm:p-8">
+              <div class="flex items-center justify-between mb-6 pb-3 border-b border-white/10">
+                <h3 class="font-display font-bold text-sm uppercase tracking-editorial text-offwhite">
+                  Software
+                </h3>
+                <span class="text-xs font-mono text-crimson">03 TOOLS</span>
+              </div>
+
+              <ul class="space-y-4">
+                <li class="flex items-center justify-between p-3.5 rounded-xl bg-charcoal border border-white/5 hover:border-crimson/50 transition-colors">
+                  <div class="flex items-center gap-3.5">
+                    <span class="w-9 h-9 rounded-lg bg-crimson/15 border border-crimson/40 text-crimson font-display font-bold text-xs flex items-center justify-center">Ai</span>
+                    <span class="text-sm font-medium text-offwhite">Adobe Illustrator.</span>
+                  </div>
+                  <span class="text-[11px] font-mono text-ash">VECTOR / BRAND</span>
+                </li>
+
+                <li class="flex items-center justify-between p-3.5 rounded-xl bg-charcoal border border-white/5 hover:border-crimson/50 transition-colors">
+                  <div class="flex items-center gap-3.5">
+                    <span class="w-9 h-9 rounded-lg bg-white/10 border border-white/20 text-offwhite font-display font-bold text-xs flex items-center justify-center">Ps</span>
+                    <span class="text-sm font-medium text-offwhite">Adobe Photoshop.</span>
+                  </div>
+                  <span class="text-[11px] font-mono text-ash">RETOUCH / MOCKUP</span>
+                </li>
+
+                <li class="flex items-center justify-between p-3.5 rounded-xl bg-charcoal border border-white/5 hover:border-crimson/50 transition-colors">
+                  <div class="flex items-center gap-3.5">
+                    <span class="w-9 h-9 rounded-lg bg-white/10 border border-white/20 text-offwhite font-display font-bold text-xs flex items-center justify-center">Id</span>
+                    <span class="text-sm font-medium text-offwhite">Adobe InDesign.</span>
+                  </div>
+                  <span class="text-[11px] font-mono text-ash">EDITORIAL / GRID</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Bloque Habilidades -->
+            <div class="bg-crimson text-white rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+              <div class="flex items-center justify-between mb-6 pb-3 border-b border-white/25">
+                <h3 class="font-display font-bold text-sm uppercase tracking-editorial">
+                  Habilidades
+                </h3>
+                <span class="text-xs font-mono text-white/80">CORE SKILLS</span>
+              </div>
+
+              <ul class="space-y-4">
+                <li class="flex items-start gap-3">
+                  <span class="font-mono text-xs mt-1 text-white/75">01</span>
+                  <span class="font-display font-bold text-lg sm:text-xl leading-snug">Branding e identidad visual.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="font-mono text-xs mt-1 text-white/75">02</span>
+                  <span class="font-display font-bold text-lg sm:text-xl leading-snug">Diseño editorial.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="font-mono text-xs mt-1 text-white/75">03</span>
+                  <span class="font-display font-bold text-lg sm:text-xl leading-snug">Diseño para redes sociales.</span>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECCIÓN 03: PROYECTOS (EXACTAMENTE 3 PROYECTOS CON COMPOSICIÓN ÚNICA) -->
+    <!-- ===================================================================== -->
+    <section id="proyectos" class="py-24 sm:py-32 px-4 sm:px-8 border-b border-white/10">
+      <div class="max-w-7xl mx-auto">
+        <!-- Encabezado de Sección -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-white/15">
+          <div>
+            <span class="text-crimson font-mono text-xs uppercase tracking-ultra block mb-3">03 / SELECCIÓN CURATORIAL</span>
+            <h2 class="font-display font-extrabold text-4xl sm:text-6xl uppercase tracking-tight text-offwhite">
+              PROYECTOS<span class="text-crimson">.</span>
+            </h2>
+          </div>
+          <p class="text-xs uppercase tracking-editorial text-ash max-w-sm">
+            HAZ CLIC EN CUALQUIER PIEZA PARA INSPECCIONARLA A PANTALLA COMPLETA CON DETALLE EDITORIAL.
+          </p>
+        </div>
+
+        <div class="space-y-32 pt-16">
+
+          <!-- =============================================================== -->
+          <!-- PROYECTO 01 — NOVA STUDIO (Composición Editorial Split + Mockup)-->
+          <!-- =============================================================== -->
+          <article class="reveal-section group">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              
+              <!-- Ficha Técnica Izquierda (4 cols) -->
+              <div class="lg:col-span-4 space-y-6 lg:sticky lg:top-28">
+                <div class="flex items-center gap-3">
+                  <span class="font-display font-extrabold text-5xl text-crimson">01</span>
+                  <div class="h-[1px] flex-1 bg-white/15"></div>
+                  <span class="text-xs font-mono uppercase tracking-editorial text-ash">PROYECTO 01</span>
+                </div>
+
+                <div>
+                  <span class="inline-block text-[11px] font-mono uppercase tracking-editorial text-crimson mb-2">
+                    Logo Design / Branding
+                  </span>
+                  <h3 class="font-display font-extrabold text-3xl sm:text-4xl uppercase text-offwhite tracking-tight">
+                    NOVA STUDIO
+                  </h3>
+                </div>
+
+                <p class="text-sm sm:text-base text-offwhite/80 leading-relaxed">
+                  Desarrollo de una identidad visual completa para una marca, creando una imagen coherente, auténtica y capaz de conectar con su público. Nova Studio es un estudio creativo enfocado en transformar ideas en soluciones visuales con identidad y propósito.
+                </p>
+
+                <div class="pt-4 border-t border-white/10 space-y-2">
+                  <span class="block text-[10px] uppercase tracking-editorial text-ash">Herramienta utilizada</span>
+                  <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-charcoal border border-white/15 text-xs text-offwhite">
+                    <span class="w-2 h-2 rounded-full bg-crimson"></span>
+                    Adobe Illustrator.
+                  </div>
+                </div>
+
+                <div class="pt-2">
+                  <button type="button" onclick="openProjectModal('nova')" class="w-full sm:w-auto px-6 py-3 rounded-full bg-offwhite text-obsidian font-display font-bold text-xs uppercase tracking-wider hover:bg-crimson hover:text-white transition-colors flex items-center justify-center gap-2">
+                    <span>Explorar Proyecto 01</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Galería Visual Derecha (8 cols): Letrero Principal + Papelería Mockup -->
+              <div class="lg:col-span-8 space-y-6">
+                <!-- Imagen Principal de Gran Tamaño: Proyecto 1 - letrero nova studio -->
+                <div class="editable-slot relative rounded-2xl overflow-hidden bg-charcoal border border-white/15 aspect-[16/10] cursor-pointer" onclick="openLightboxFromImg('img-p1-main', 'Proyecto 01 — NOVA STUDIO (Letrero Exterior)')">
+                  <img
+                    id="img-p1-main"
+                    src="Proyecto 1 - letrero nova studio.jpg"
+                    onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='Proyecto 1 - letrero nova studio.png';}else{this.style.display='none';document.getElementById('ph-p1-main').classList.remove('hidden');}"
+                    alt="Proyecto 1 - letrero nova studio"
+                    class="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-700"
+                  />
+                  <div id="ph-p1-main" class="hidden w-full h-full flex flex-col items-center justify-center p-8 text-center">
+                    <span class="text-xs font-mono text-crimson uppercase tracking-editorial mb-2">IMAGEN PRINCIPAL · PROYECTO 01</span>
+                    <p class="font-display text-lg text-offwhite mb-2">Proyecto 1 - letrero nova studio</p>
+                    <p class="text-xs text-ash max-w-md mb-4">Espacio preparado para la fotografía principal del letrero corporativo de Nova Studio.</p>
+                    <button type="button" onclick="event.stopPropagation(); triggerUpload('img-p1-main', 'ph-p1-main')" class="px-4 py-2 rounded-full bg-crimson text-white text-xs uppercase tracking-wider">Cargar imagen</button>
+                  </div>
+                  <div class="absolute top-4 left-4 bg-obsidian/85 backdrop-blur-sm border border-white/15 px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider text-offwhite">
+                    01.A — Aplicación Arquitectónica / Letrero
+                  </div>
+                  <button type="button" onclick="event.stopPropagation(); triggerUpload('img-p1-main', 'ph-p1-main')" class="slot-overlay opacity-0 transition-opacity absolute top-4 right-4 px-3 py-1 rounded-full bg-obsidian/90 border border-white/25 text-[11px] text-offwhite hover:border-crimson">
+                    Cambiar archivo
+                  </button>
+                </div>
+
+                <!-- Sub-galería: Mockup Papelería + Detalle Editable -->
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-6">
+                  <div class="sm:col-span-8 editable-slot relative rounded-2xl overflow-hidden bg-charcoal border border-white/15 aspect-[4/3] cursor-pointer" onclick="openLightboxFromImg('img-p1-sub', 'Proyecto 01 — NOVA STUDIO (Papelería Corporativa)')">
+                    <img
+                      id="img-p1-sub"
+                      src="Proyecto 1 - papelería de nova studio.png"
+                      onerror="if(!this.dataset.triedJpg){this.dataset.triedJpg='1';this.src='Proyecto 1 - papelería de nova studio.jpg';}else{this.style.display='none';document.getElementById('ph-p1-sub').classList.remove('hidden');}"
+                      alt="Proyecto 1 - papelería de nova studio"
+                      class="w-full h-full object-cover hover:scale-[1.02] transition-transform duration-700"
+                    />
+                    <div id="ph-p1-sub" class="hidden w-full h-full flex flex-col items-center justify-center p-6 text-center">
+                      <span class="text-xs font-mono text-crimson uppercase tracking-editorial mb-1">APARTADO MOCKUP</span>
+                      <p class="font-display text-sm text-offwhite mb-3">Proyecto 1 - papelería de nova studio</p>
+                      <button type="button" onclick="event.stopPropagation(); triggerUpload('img-p1-sub', 'ph-p1-sub')" class="px-3.5 py-1.5 rounded-full bg-crimson text-white text-xs">Cargar mockup</button>
+                    </div>
+                    <div class="absolute bottom-3 left-3 bg-obsidian/85 backdrop-blur-sm border border-white/15 px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider text-offwhite">
+                      01.B — Mockup Papelería Nova Studio
+                    </div>
+                    <button type="button" onclick="event.stopPropagation(); triggerUpload('img-p1-sub', 'ph-p1-sub')" class="slot-overlay opacity-0 transition-opacity absolute top-3 right-3 px-3 py-1 rounded-full bg-obsidian/90 border border-white/25 text-[11px] text-offwhite hover:border-crimson">
+                      Cambiar
+                    </button>
+                  </div>
+
+                  <!-- Tarjeta de Síntesis Visual / Construcción de Marca -->
+                  <div class="sm:col-span-4 bg-charcoal border border-white/10 rounded-2xl p-6 flex flex-col justify-between">
+                    <div>
+                      <span class="text-[10px] font-mono uppercase tracking-editorial text-crimson block mb-2">SISTEMA VISUAL</span>
+                      <h4 class="font-display font-bold text-lg text-offwhite mb-3">Construcción & Papelería</h4>
+                      <p class="text-xs text-ash leading-relaxed">
+                        Sistema modular basado en monograma geométrico y aplicaciones impresas de papelería corporativa.
+                      </p>
+                    </div>
+                    <div class="pt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-offwhite">
+                      <span>2 PIEZAS</span>
+                      <button type="button" onclick="openProjectModal('nova')" class="text-crimson hover:underline">Ver galería ↗</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </article>
+
+          <!-- Divisor editorial entre proyectos -->
+          <div class="border-t border-white/10"></div>
+
+          <!-- =============================================================== -->
+          <!-- PROYECTO 02 — IBERIA (Composición Invertida / Espécimen Vertical)-->
+          <!-- =============================================================== -->
+          <article class="reveal-section group">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              
+              <!-- Galería Visual Izquierda (7 cols) -->
+              <div class="lg:col-span-7 order-2 lg:order-1 grid grid-cols-1 sm:grid-cols-12 gap-6 items-stretch">
+                <!-- Espécimen Tipográfico Completo (Proyecto-2-tipografía-iberia.png) -->
+                <div class="sm:col-span-8 editable-slot relative rounded-2xl overflow-hidden bg-offwhite border border-white/15 aspect-[3/4] cursor-pointer" onclick="openLightboxFromImg('img-p2-main', 'Proyecto 02 — IBERIA (Espécimen Tipográfico)')">
+                  <img
+                    id="img-p2-main"
+                    src="Proyecto-2-tipografía-iberia.png"
+                    onerror="if(!this.dataset.triedJpg){this.dataset.triedJpg='1';this.src='Proyecto-2-tipografía-iberia.jpg';}else{this.style.display='none';document.getElementById('ph-p2-main').classList.remove('hidden');}"
+                    alt="Proyecto-2-tipografía-iberia"
+                    class="w-full h-full object-contain p-3 hover:scale-[1.02] transition-transform duration-700"
+                  />
+                  <div id="ph-p2-main" class="hidden w-full h-full bg-charcoal flex flex-col items-center justify-center p-8 text-center">
+                    <span class="text-xs font-mono text-crimson uppercase tracking-editorial mb-2">ESPÉCIMEN TIPOGRÁFICO · PROYECTO 02</span>
+                    <p class="font-display text-lg text-offwhite mb-2">Proyecto-2-tipografía-iberia</p>
+                    <p class="text-xs text-ash max-w-xs mb-4">Espacio preparado para la lámina tipográfica completa del alfabeto Iberia.</p>
+                    <button type="button" onclick="event.stopPropagation(); triggerUpload('img-p2-main', 'ph-p2-main')" class="px-4 py-2 rounded-full bg-crimson text-white text-xs uppercase tracking-wider">Cargar lámina</button>
+                  </div>
+                  <div class="absolute bottom-3 left-3 bg-obsidian/90 border border-white/15 px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider text-offwhite">
+                    02.A — Alfabeto Completo Iberia
+                  </div>
+                  <button type="button" onclick="event.stopPropagation(); triggerUpload('img-p2-main', 'ph-p2-main')" class="slot-overlay opacity-0 transition-opacity absolute top-3 right-3 px-3 py-1 rounded-full bg-obsidian/90 border border-white/25 text-[11px] text-offwhite hover:border-crimson">
+                    Cambiar archivo
+                  </button>
+                </div>
+
+                <!-- Columna de Conceptualización Editorial (4 cols, sin apartado 02.B) -->
+                <div class="sm:col-span-4 bg-charcoal border border-white/10 rounded-2xl p-6 flex flex-col justify-between">
+                  <div class="space-y-4">
+                    <span class="text-[10px] font-mono uppercase tracking-editorial text-crimson block">INSPIRACIÓN</span>
+                    <h4 class="font-display font-bold text-lg text-offwhite leading-snug">
+                      Mosaicos &amp; Geometría Cultural
+                    </h4>
+                    <p class="text-xs text-offwhite/85 leading-relaxed">
+                      Mosaicos, cerámica tradicional y geometría arquitectónica española traducida a módulos tipográficos.
+                    </p>
+                  </div>
+                  <div class="pt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-ash">
+                    <span>26 GLIFOS</span>
+                    <span class="text-crimson">IBERIA</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Ficha Técnica Derecha (5 cols) -->
+              <div class="lg:col-span-5 order-1 lg:order-2 space-y-6 lg:sticky lg:top-28">
+                <div class="flex items-center gap-3">
+                  <span class="font-display font-extrabold text-5xl text-crimson">02</span>
+                  <div class="h-[1px] flex-1 bg-white/15"></div>
+                  <span class="text-xs font-mono uppercase tracking-editorial text-ash">PROYECTO 02</span>
+                </div>
+
+                <div>
+                  <span class="inline-block text-[11px] font-mono uppercase tracking-editorial text-crimson mb-2">
+                    Typography Design
+                  </span>
+                  <h3 class="font-display font-extrabold text-3xl sm:text-4xl uppercase text-offwhite tracking-tight">
+                    IBERIA
+                  </h3>
+                </div>
+
+                <p class="text-sm sm:text-base text-offwhite/80 leading-relaxed">
+                  Diseño tipográfico inspirado en España, su cultura, arquitectura, mosaicos, cerámicas y tradiciones. El proyecto explora los colores vibrantes y las formas geométricas que representan su identidad visual.
+                </p>
+
+                <div class="pt-4 border-t border-white/10 space-y-2">
+                  <span class="block text-[10px] uppercase tracking-editorial text-ash">Herramienta utilizada</span>
+                  <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-charcoal border border-white/15 text-xs text-offwhite">
+                    <span class="w-2 h-2 rounded-full bg-crimson"></span>
+                    Adobe Illustrator.
+                  </div>
+                </div>
+
+                <div class="pt-2">
+                  <button type="button" onclick="openProjectModal('iberia')" class="w-full sm:w-auto px-6 py-3 rounded-full bg-offwhite text-obsidian font-display font-bold text-xs uppercase tracking-wider hover:bg-crimson hover:text-white transition-colors flex items-center justify-center gap-2">
+                    <span>Explorar Proyecto 02</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </article>
+
+          <!-- Divisor editorial entre proyectos -->
+          <div class="border-t border-white/10"></div>
+
+          <!-- =============================================================== -->
+          <!-- PROYECTO 03 — SOURCE SANS (Composición Infográfica Panorámica)  -->
+          <!-- =============================================================== -->
+          <article class="reveal-section group">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              
+              <!-- Ficha Técnica Izquierda (4 cols) -->
+              <div class="lg:col-span-4 space-y-6 lg:sticky lg:top-28">
+                <div class="flex items-center gap-3">
+                  <span class="font-display font-extrabold text-5xl text-crimson">03</span>
+                  <div class="h-[1px] flex-1 bg-white/15"></div>
+                  <span class="text-xs font-mono uppercase tracking-editorial text-ash">PROYECTO 03</span>
+                </div>
+
+                <div>
+                  <span class="inline-block text-[11px] font-mono uppercase tracking-editorial text-crimson mb-2">
+                    Infography Design
+                  </span>
+                  <h3 class="font-display font-extrabold text-3xl sm:text-4xl uppercase text-offwhite tracking-tight">
+                    SOURCE SANS
+                  </h3>
+                </div>
+
+                <p class="text-sm sm:text-base text-offwhite/80 leading-relaxed">
+                  Infografía de visualización de datos sobre la tipografía Source Sans, creada para comunicar de manera clara y visual los resultados obtenidos en diferentes experimentos de lectura y analizar su legibilidad.
+                </p>
+
+                <div class="pt-4 border-t border-white/10 space-y-2">
+                  <span class="block text-[10px] uppercase tracking-editorial text-ash">Herramientas utilizadas</span>
+                  <div class="flex flex-wrap gap-2">
+                    <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-charcoal border border-white/15 text-xs text-offwhite">
+                      <span class="w-2 h-2 rounded-full bg-crimson"></span>
+                      Adobe Illustrator
+                    </span>
+                    <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-charcoal border border-white/15 text-xs text-offwhite">
+                      <span class="w-2 h-2 rounded-full bg-offwhite"></span>
+                      Adobe Photoshop
+                    </span>
+                  </div>
+                </div>
+
+                <div class="pt-2">
+                  <button type="button" onclick="openProjectModal('sourcesans')" class="w-full sm:w-auto px-6 py-3 rounded-full bg-offwhite text-obsidian font-display font-bold text-xs uppercase tracking-wider hover:bg-crimson hover:text-white transition-colors flex items-center justify-center gap-2">
+                    <span>Explorar Proyecto 03</span>
+                    <span>→</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Lámina Infográfica Derecha (8 cols) -->
+              <div class="lg:col-span-8">
+                <div class="editable-slot relative rounded-2xl overflow-hidden bg-charcoal border border-white/15 cursor-pointer shadow-2xl" onclick="openLightboxFromImg('img-p3-main', 'Proyecto 03 — SOURCE SANS (Infografía de Lectura y Rendimiento)')">
+                  <img
+                    id="img-p3-main"
+                    src="Proyecto 3 Source-infografía.jpg"
+                    onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='Proyecto 3 Source-infografía.png';}else{this.style.display='none';document.getElementById('ph-p3-main').classList.remove('hidden');}"
+                    alt="Proyecto 3 Source-infografía"
+                    class="w-full h-auto max-h-[780px] object-contain mx-auto bg-obsidian hover:scale-[1.01] transition-transform duration-700"
+                  />
+                  <div id="ph-p3-main" class="hidden w-full min-h-[460px] flex flex-col items-center justify-center p-8 text-center">
+                    <span class="text-xs font-mono text-crimson uppercase tracking-editorial mb-2">INFOGRAFÍA EDITORIAL · PROYECTO 03</span>
+                    <p class="font-display text-lg text-offwhite mb-2">Proyecto 3 Source-infografía</p>
+                    <p class="text-xs text-ash max-w-md mb-4">Espacio preparado para la lámina completa de visualización de datos de Source Sans.</p>
+                    <button type="button" onclick="event.stopPropagation(); triggerUpload('img-p3-main', 'ph-p3-main')" class="px-4 py-2 rounded-full bg-crimson text-white text-xs uppercase tracking-wider">Cargar infografía</button>
+                  </div>
+                  <div class="absolute bottom-4 left-4 bg-obsidian/90 backdrop-blur-sm border border-white/15 px-3.5 py-1.5 rounded-full text-[10px] font-mono uppercase tracking-wider text-offwhite">
+                    03.A — Lámina Infográfica Completa (Clic para ampliar)
+                  </div>
+                  <button type="button" onclick="event.stopPropagation(); triggerUpload('img-p3-main', 'ph-p3-main')" class="slot-overlay opacity-0 transition-opacity absolute top-4 right-4 px-3 py-1 rounded-full bg-obsidian/90 border border-white/25 text-[11px] text-offwhite hover:border-crimson">
+                    Cambiar archivo
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- SECCIÓN 04: MY HOBBIES (COLLAGE EDITORIAL CON 4 ACTIVIDADES EXACTAS)  -->
+    <!-- ===================================================================== -->
+    <section id="hobbies" class="reveal-section py-24 sm:py-32 px-4 sm:px-8 bg-charcoal/30">
+      <div class="max-w-7xl mx-auto">
+        <!-- Encabezado de Sección -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-white/15">
+          <div>
+            <span class="text-crimson font-mono text-xs uppercase tracking-ultra block mb-3">04 / UNIVERSO PERSONAL</span>
+            <h2 class="font-display font-extrabold text-4xl sm:text-6xl uppercase tracking-tight text-offwhite">
+              MY HOBBIES<span class="text-crimson">.</span>
+            </h2>
+          </div>
+          <p class="text-xs uppercase tracking-editorial text-ash max-w-xs">
+            INSPIRACIÓN COTIDIANA · LITERATURA, SONIDO, IMAGEN EN MOVIMIENTO Y COLOR
+          </p>
+        </div>
+
+        <!-- Collage Editorial Asimétrico de 4 Actividades -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pt-14 items-start">
+
+          <!-- 1. LEER (Columna 1-6, formato editorial vertical) -->
+          <article class="md:col-span-6 bg-obsidian border border-white/10 rounded-2xl overflow-hidden group hover:border-crimson/60 transition-colors">
+            <div class="editable-slot relative aspect-[4/3] overflow-hidden bg-charcoal cursor-pointer" onclick="openLightboxFromImg('img-hobby-leer', 'MY HOBBIES — 01. LEER')">
+              <img
+                id="img-hobby-leer"
+                src="Leer.jpg"
+                onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='Leer.png';}else{this.style.display='none';document.getElementById('ph-hobby-leer').classList.remove('hidden');}"
+                alt="Leer"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div id="ph-hobby-leer" class="hidden w-full h-full flex flex-col items-center justify-center p-6 text-center">
+                <span class="text-xs font-mono text-crimson mb-1">FOTOGRAFÍA 01</span>
+                <p class="font-display text-base text-offwhite mb-3">Leer.jpg</p>
+                <button type="button" onclick="event.stopPropagation(); triggerUpload('img-hobby-leer', 'ph-hobby-leer')" class="px-3.5 py-1.5 rounded-full bg-crimson text-white text-xs">Cargar foto</button>
+              </div>
+              <span class="absolute top-4 left-4 bg-obsidian/85 border border-white/15 px-3 py-1 rounded-full text-[11px] font-mono text-crimson">01</span>
+              <button type="button" onclick="event.stopPropagation(); triggerUpload('img-hobby-leer', 'ph-hobby-leer')" class="slot-overlay opacity-0 transition-opacity absolute top-4 right-4 px-3 py-1 rounded-full bg-obsidian/90 border border-white/25 text-[11px] text-offwhite">Cambiar</button>
+            </div>
+            <div class="p-6 sm:p-8 space-y-3">
+              <h3 class="font-display font-extrabold text-2xl uppercase text-offwhite tracking-wide">
+                LEER
+              </h3>
+              <p class="text-sm sm:text-base text-offwhite/80 leading-relaxed">
+                Me gusta leer como una forma de conocer nuevas historias, ideas y perspectivas que también pueden servir como fuente de inspiración.
+              </p>
+            </div>
+          </article>
+
+          <!-- 2. MÚSICA (Columna 7-12, desplazada verticalmente en desktop para ritmo collage) -->
+          <article class="md:col-span-6 md:mt-14 bg-obsidian border border-white/10 rounded-2xl overflow-hidden group hover:border-crimson/60 transition-colors">
+            <div class="editable-slot relative aspect-[4/3] overflow-hidden bg-charcoal cursor-pointer" onclick="openLightboxFromImg('img-hobby-musica', 'MY HOBBIES — 02. MÚSICA')">
+              <img
+                id="img-hobby-musica"
+                src="Música.jpg"
+                onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='Música.png';}else{this.style.display='none';document.getElementById('ph-hobby-musica').classList.remove('hidden');}"
+                alt="Música"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div id="ph-hobby-musica" class="hidden w-full h-full flex flex-col items-center justify-center p-6 text-center">
+                <span class="text-xs font-mono text-crimson mb-1">FOTOGRAFÍA 02</span>
+                <p class="font-display text-base text-offwhite mb-3">Música.jpg</p>
+                <button type="button" onclick="event.stopPropagation(); triggerUpload('img-hobby-musica', 'ph-hobby-musica')" class="px-3.5 py-1.5 rounded-full bg-crimson text-white text-xs">Cargar foto</button>
+              </div>
+              <span class="absolute top-4 left-4 bg-obsidian/85 border border-white/15 px-3 py-1 rounded-full text-[11px] font-mono text-crimson">02</span>
+              <button type="button" onclick="event.stopPropagation(); triggerUpload('img-hobby-musica', 'ph-hobby-musica')" class="slot-overlay opacity-0 transition-opacity absolute top-4 right-4 px-3 py-1 rounded-full bg-obsidian/90 border border-white/25 text-[11px] text-offwhite">Cambiar</button>
+            </div>
+            <div class="p-6 sm:p-8 space-y-3">
+              <h3 class="font-display font-extrabold text-2xl uppercase text-offwhite tracking-wide">
+                MÚSICA
+              </h3>
+              <p class="text-sm sm:text-base text-offwhite/80 leading-relaxed">
+                Disfruto especialmente del rock alternativo, pop rock, indie pop y rock en español. Me gustan las canciones que transmiten emociones, cuentan historias y tienen una identidad propia.
+              </p>
+            </div>
+          </article>
+
+          <!-- 3. CINE (Columna 1-5) -->
+          <article class="md:col-span-5 bg-obsidian border border-white/10 rounded-2xl overflow-hidden group hover:border-crimson/60 transition-colors">
+            <div class="editable-slot relative aspect-[4/5] overflow-hidden bg-charcoal cursor-pointer" onclick="openLightboxFromImg('img-hobby-cine', 'MY HOBBIES — 03. CINE')">
+              <img
+                id="img-hobby-cine"
+                src="Cine.jpg"
+                onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='Cine.png';}else{this.style.display='none';document.getElementById('ph-hobby-cine').classList.remove('hidden');}"
+                alt="Cine"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div id="ph-hobby-cine" class="hidden w-full h-full flex flex-col items-center justify-center p-6 text-center">
+                <span class="text-xs font-mono text-crimson mb-1">FOTOGRAFÍA 03</span>
+                <p class="font-display text-base text-offwhite mb-3">Cine.jpg</p>
+                <button type="button" onclick="event.stopPropagation(); triggerUpload('img-hobby-cine', 'ph-hobby-cine')" class="px-3.5 py-1.5 rounded-full bg-crimson text-white text-xs">Cargar foto</button>
+              </div>
+              <span class="absolute top-4 left-4 bg-obsidian/85 border border-white/15 px-3 py-1 rounded-full text-[11px] font-mono text-crimson">03</span>
+              <button type="button" onclick="event.stopPropagation(); triggerUpload('img-hobby-cine', 'ph-hobby-cine')" class="slot-overlay opacity-0 transition-opacity absolute top-4 right-4 px-3 py-1 rounded-full bg-obsidian/90 border border-white/25 text-[11px] text-offwhite">Cambiar</button>
+            </div>
+            <div class="p-6 sm:p-8 space-y-3">
+              <h3 class="font-display font-extrabold text-2xl uppercase text-offwhite tracking-wide">
+                CINE
+              </h3>
+              <p class="text-sm sm:text-base text-offwhite/80 leading-relaxed">
+                Disfruto descubrir historias a través del cine y las series. Me gusta observar los detalles, la fotografía, los escenarios y la manera en que cada historia transmite emociones.
+              </p>
+            </div>
+          </article>
+
+          <!-- 4. ACUARELA (Columna 6-12, bloque amplio contrastante) -->
+          <article class="md:col-span-7 md:mt-10 bg-obsidian border border-white/10 rounded-2xl overflow-hidden group hover:border-crimson/60 transition-colors">
+            <div class="editable-slot relative aspect-[4/3] overflow-hidden bg-charcoal cursor-pointer" onclick="openLightboxFromImg('img-hobby-acuarela', 'MY HOBBIES — 04. ACUARELA')">
+              <img
+                id="img-hobby-acuarela"
+                src="Acuarela.jpg"
+                onerror="if(!this.dataset.triedPng){this.dataset.triedPng='1';this.src='Acuarela.png';}else{this.style.display='none';document.getElementById('ph-hobby-acuarela').classList.remove('hidden');}"
+                alt="Acuarela"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
+              <div id="ph-hobby-acuarela" class="hidden w-full h-full flex flex-col items-center justify-center p-6 text-center">
+                <span class="text-xs font-mono text-crimson mb-1">FOTOGRAFÍA 04</span>
+                <p class="font-display text-base text-offwhite mb-3">Acuarela.jpg</p>
+                <button type="button" onclick="event.stopPropagation(); triggerUpload('img-hobby-acuarela', 'ph-hobby-acuarela')" class="px-3.5 py-1.5 rounded-full bg-crimson text-white text-xs">Cargar foto</button>
+              </div>
+              <span class="absolute top-4 left-4 bg-obsidian/85 border border-white/15 px-3 py-1 rounded-full text-[11px] font-mono text-crimson">04</span>
+              <button type="button" onclick="event.stopPropagation(); triggerUpload('img-hobby-acuarela', 'ph-hobby-acuarela')" class="slot-overlay opacity-0 transition-opacity absolute top-4 right-4 px-3 py-1 rounded-full bg-obsidian/90 border border-white/25 text-[11px] text-offwhite">Cambiar</button>
+            </div>
+            <div class="p-6 sm:p-8 space-y-3">
+              <h3 class="font-display font-extrabold text-2xl uppercase text-offwhite tracking-wide">
+                ACUARELA
+              </h3>
+              <p class="text-sm sm:text-base text-offwhite/80 leading-relaxed">
+                Disfruto pintar con acuarelas y experimentar con los colores y las texturas que se pueden crear con esta técnica.
+              </p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- PIE DE PÁGINA EDITORIAL & BOTÓN VOLVER AL INICIO                      -->
+  <!-- ===================================================================== -->
+  <footer class="bg-obsidian border-t border-white/15 py-14 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+      <div class="space-y-2">
+        <div class="flex items-center gap-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-crimson"></span>
+          <span class="font-display font-extrabold text-lg uppercase tracking-wider text-offwhite">DOMÉNICA CHICA.</span>
+        </div>
+        <p class="text-xs text-ash uppercase tracking-editorial">
+          Diseñadora gráfica · Portafolio Personal 2026
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-6 text-xs text-offwhite/80">
+        <a href="mailto:domenicachica@gmail.com" class="editorial-link hover:text-crimson transition-colors">domenicachica@gmail.com</a>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="editorial-link hover:text-crimson transition-colors">Instagram</a>
+        <a href="tel:+593998368387" class="editorial-link hover:text-crimson transition-colors">+593 99 836 8387</a>
+      </div>
+
+      <!-- Botón para volver al inicio -->
+      <a href="#inicio" class="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-charcoal border border-white/15 hover:border-crimson hover:bg-crimson text-offwhite text-xs font-display font-bold uppercase tracking-wider transition-all">
+        <span>Volver al inicio</span>
+        <span>↑</span>
+      </a>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL INTERACTIVO DE DETALLE DE PROYECTO / LIGHTBOX                   -->
+  <!-- ===================================================================== -->
+  <div id="projectModal" class="fixed inset-0 z-50 hidden bg-obsidian/95 backdrop-blur-md overflow-y-auto p-4 sm:p-8" role="dialog" aria-modal="true">
+    <div class="max-w-5xl mx-auto bg-charcoal border border-white/15 rounded-2xl overflow-hidden shadow-2xl my-6">
+      <!-- Barra superior del modal -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-obsidian">
+        <div class="flex items-center gap-3">
+          <span id="modalNumber" class="font-display font-extrabold text-crimson text-lg">01</span>
+          <span id="modalCategory" class="text-[11px] font-mono uppercase tracking-editorial text-ash">CATEGORÍA</span>
+        </div>
+        <button type="button" onclick="closeProjectModal()" class="px-4 py-1.5 rounded-full border border-white/20 text-xs uppercase tracking-wider text-offwhite hover:border-crimson hover:bg-crimson transition-colors">
+          Cerrar ✕
+        </button>
+      </div>
+
+      <!-- Cuerpo del modal -->
+      <div class="p-6 sm:p-10 space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
+          <div class="md:col-span-7">
+            <h3 id="modalTitle" class="font-display font-extrabold text-3xl sm:text-5xl uppercase text-offwhite">TÍTULO</h3>
+          </div>
+          <div class="md:col-span-5 md:text-right">
+            <span class="block text-[10px] uppercase tracking-editorial text-ash mb-1">Herramientas</span>
+            <span id="modalTools" class="inline-block px-3.5 py-1 rounded-full bg-obsidian border border-white/15 text-xs text-offwhite">Adobe Illustrator</span>
+          </div>
+        </div>
+
+        <p id="modalDescription" class="text-sm sm:text-base text-offwhite/85 leading-relaxed border-l-2 border-crimson pl-5">
+          Descripción del proyecto.
+        </p>
+
+        <!-- Galería ampliada dentro del modal -->
+        <div id="modalGallery" class="space-y-6"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input oculto para carga dinámica de archivos locales -->
+  <input type="file" id="hiddenFileInput" accept="image/*" class="hidden" />
+
+  <script>
+    // -----------------------------------------------------------------------
+    // 1. MENÚ MÓVIL Y NAVEGACIÓN SUAVE
+    // -----------------------------------------------------------------------
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+
+    // -----------------------------------------------------------------------
+    // 2. ANIMACIONES DE ENTRADA AL DESPLAZARSE (INTERSECTION OBSERVER)
+    // -----------------------------------------------------------------------
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal-section').forEach(section => {
+      revealObserver.observe(section);
+    });
+
+    // -----------------------------------------------------------------------
+    // 3. NOTIFICACIÓN TOAST Y COPIADO AL PORTAPAPELES (SIN alert())
+    // -----------------------------------------------------------------------
+    let toastTimer = null;
+    function showToast(message) {
+      const banner = document.getElementById('toastBanner');
+      const text = document.getElementById('toastText');
+      text.textContent = message;
+      banner.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        banner.classList.add('hidden');
+      }, 3200);
+    }
+
+    function copyContact(value, label) {
+      const tempInput = document.createElement('input');
+      tempInput.value = value;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand('copy');
+        showToast(label + ': ' + value);
+      } catch (e) {
+        showToast(value);
+      }
+      document.body.removeChild(tempInput);
+    }
+
+    // -----------------------------------------------------------------------
+    // 4. MODO EDICIÓN / REEMPLAZO DE FOTOGRAFÍAS EN VIVO
+    // -----------------------------------------------------------------------
+    let activeTargetImgId = null;
+    let activePlaceholderId = null;
+    let editHighlightActive = false;
+    const hiddenFileInput = document.getElementById('hiddenFileInput');
+
+    const toggleEditModeBtn = document.getElementById('toggleEditModeBtn');
+    if (toggleEditModeBtn) {
+      toggleEditModeBtn.addEventListener('click', () => {
+        editHighlightActive = !editHighlightActive;
+        const dot = document.getElementById('editDot');
+        const overlays = document.querySelectorAll('.slot-overlay');
+
+        if (editHighlightActive) {
+          if (dot) {
+            dot.classList.remove('bg-ash');
+            dot.classList.add('bg-crimson');
+          }
+          overlays.forEach(el => el.classList.remove('opacity-0'));
+          showToast('Modo carga activo: haz clic en "Cambiar" sobre cualquier fotografía para insertar tu archivo.');
+        } else {
+          if (dot) {
+            dot.classList.remove('bg-crimson');
+            dot.classList.add('bg-ash');
+          }
+          overlays.forEach(el => el.classList.add('opacity-0'));
+          showToast('Vista editorial limpia activada.');
+        }
+      });
+    }
+
+    function triggerUpload(imgId, placeholderId) {
+      activeTargetImgId = imgId;
+      activePlaceholderId = placeholderId;
+      hiddenFileInput.value = '';
+      hiddenFileInput.click();
+    }
+
+    hiddenFileInput.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file || !activeTargetImgId) return;
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const imgEl = document.getElementById(activeTargetImgId);
+        const phEl = activePlaceholderId ? document.getElementById(activePlaceholderId) : null;
+        if (imgEl) {
+          imgEl.src = event.target.result;
+          imgEl.style.display = 'block';
+        }
+        if (phEl) {
+          phEl.classList.add('hidden');
+        }
+        showToast('Fotografía actualizada: ' + file.name);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // -----------------------------------------------------------------------
+    // 5. MODAL INTERACTIVO DE PROYECTOS Y LIGHTBOX
+    // -----------------------------------------------------------------------
+    const projectsData = {
+      nova: {
+        number: '01',
+        title: 'NOVA STUDIO',
+        category: 'Logo Design / Branding',
+        tools: 'Adobe Illustrator.',
+        description: 'Desarrollo de una identidad visual completa para una marca, creando una imagen coherente, auténtica y capaz de conectar con su público. Nova Studio es un estudio creativo enfocado en transformar ideas en soluciones visuales con identidad y propósito.',
+        images: [
+          { imgId: 'img-p1-main', caption: 'Proyecto 1 — Letrero exterior Nova Studio' },
+          { imgId: 'img-p1-sub', caption: 'Proyecto 1 — Mockup papelería corporativa Nova Studio' }
+        ]
+      },
+      iberia: {
+        number: '02',
+        title: 'IBERIA',
+        category: 'Typography Design',
+        tools: 'Adobe Illustrator.',
+        description: 'Diseño tipográfico inspirado en España, su cultura, arquitectura, mosaicos, cerámicas y tradiciones. El proyecto explora los colores vibrantes y las formas geométricas que representan su identidad visual.',
+        images: [
+          { imgId: 'img-p2-main', caption: 'Proyecto 2 — Espécimen tipográfico completo Iberia' }
+        ]
+      },
+      sourcesans: {
+        number: '03',
+        title: 'SOURCE SANS',
+        category: 'Infography Design',
+        tools: 'Adobe Illustrator y Adobe Photoshop.',
+        description: 'Infografía de visualización de datos sobre la tipografía Source Sans, creada para comunicar de manera clara y visual los resultados obtenidos en diferentes experimentos de lectura y analizar su legibilidad.',
+        images: [
+          { imgId: 'img-p3-main', caption: 'Proyecto 3 — Infografía de visualización de datos Source Sans' }
+        ]
+      }
+    };
+
+    function openProjectModal(key) {
+      const data = projectsData[key];
+      if (!data) return;
+
+      document.getElementById('modalNumber').textContent = data.number;
+      document.getElementById('modalCategory').textContent = data.category;
+      document.getElementById('modalTitle').textContent = data.title;
+      document.getElementById('modalTools').textContent = data.tools;
+      document.getElementById('modalDescription').textContent = data.description;
+
+      const gallery = document.getElementById('modalGallery');
+      gallery.innerHTML = '';
+
+      data.images.forEach(item => {
+        const sourceImg = document.getElementById(item.imgId);
+        const wrapper = document.createElement('figure');
+        wrapper.className = 'bg-obsidian border border-white/10 rounded-xl overflow-hidden';
+
+        if (sourceImg && sourceImg.style.display !== 'none' && sourceImg.src) {
+          const img = document.createElement('img');
+          img.src = sourceImg.src;
+          img.alt = item.caption;
+          img.className = 'w-full max-h-[75vh] object-contain mx-auto bg-obsidian';
+          wrapper.appendChild(img);
+        } else {
+          const empty = document.createElement('div');
+          empty.className = 'p-12 text-center text-xs text-ash';
+          empty.textContent = 'Espacio preparado para: ' + item.caption;
+          wrapper.appendChild(empty);
+        }
+
+        const cap = document.createElement('figcaption');
+        cap.className = 'px-5 py-3 border-t border-white/10 text-xs font-mono text-ash';
+        cap.textContent = item.caption;
+        wrapper.appendChild(cap);
+
+        gallery.appendChild(wrapper);
+      });
+
+      document.getElementById('projectModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function openLightboxFromImg(imgId, caption) {
+      const sourceImg = document.getElementById(imgId);
+      if (!sourceImg || sourceImg.style.display === 'none') return;
+
+      document.getElementById('modalNumber').textContent = 'ZOOM';
+      document.getElementById('modalCategory').textContent = 'VISTA DETALLADA';
+      document.getElementById('modalTitle').textContent = caption;
+      document.getElementById('modalTools').textContent = 'Portafolio 2026';
+      document.getElementById('modalDescription').textContent = 'Inspección visual de alta nitidez.';
+
+      const gallery = document.getElementById('modalGallery');
+      gallery.innerHTML = '';
+
+      const wrapper = document.createElement('figure');
+      wrapper.className = 'bg-obsidian border border-white/10 rounded-xl overflow-hidden';
+
+      const img = document.createElement('img');
+      img.src = sourceImg.src;
+      img.alt = caption;
+      img.className = 'w-full max-h-[80vh] object-contain mx-auto';
+      wrapper.appendChild(img);
+
+      gallery.appendChild(wrapper);
+
+      document.getElementById('projectModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeProjectModal() {
+      document.getElementById('projectModal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    // Cerrar modal con tecla Escape o clic en el fondo oscuro
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeProjectModal();
+    });
+
+    document.getElementById('projectModal').addEventListener('click', (e) => {
+      if (e.target.id === 'projectModal') closeProjectModal();
+    });
+
+    // -----------------------------------------------------------------------
+    // 6. ANIMACIÓN GENERATIVA P5.JS EN PORTADA (PALETA EDITORIAL DEL PORTAFOLIO)
+    // -----------------------------------------------------------------------
+    let paleta_fundo = "#070707";
+    let paleta_contorno = "#F5F5F3";
+    let paleta_cores = [
+      "#D91A2A", // Rojo intenso principal
+      "#9E111D", // Rojo oscuro editorial
+      "#1E1E1E", // Gris grafito
+      "#111111", // Carbón profundo
+      "#8C8C8C", // Gris ceniza
+      "#070707", // Negro obsidiana
+      "#F5F5F3"  // Blanco editorial
+    ];
+
+    let seno_escala = 0.01;
+    let grade_coluna_qtd;
+    let grade_linha_qtd;
+    let semente;
+
+    function setup() {
+      const heroSection = document.getElementById('inicio');
+      const w = heroSection ? heroSection.offsetWidth : windowWidth;
+      const h = heroSection ? heroSection.offsetHeight : windowHeight;
+      const cnv = createCanvas(w, h);
+      cnv.parent('p5-hero-container');
+      strokeJoin(ROUND);
+
+      grade_coluna_qtd = floor(random(3, 7));
+      let modulo_tamanho = width / grade_coluna_qtd;
+      grade_linha_qtd = ceil(height / modulo_tamanho);
+
+      semente = random(1000);
+    }
+
+    function windowResized() {
+      const heroSection = document.getElementById('inicio');
+      const w = heroSection ? heroSection.offsetWidth : windowWidth;
+      const h = heroSection ? heroSection.offsetHeight : windowHeight;
+      resizeCanvas(w, h);
+      let modulo_tamanho = width / grade_coluna_qtd;
+      grade_linha_qtd = ceil(height / modulo_tamanho);
+    }
+
+    function draw() {
+      background(paleta_fundo);
+      randomSeed(semente);
+      grade(0, 0, grade_coluna_qtd, grade_linha_qtd, width);
+    }
+
+    function grade(x_inicial, y_inicial, coluna_qtd, linha_qtd, largura_total) {
+      stroke(paleta_contorno);
+      strokeWeight(1.5);
+
+      let modulo_tamanho = largura_total / coluna_qtd;
+      let movimento_diferencial = 0;
+      for (let j = 0; j < linha_qtd; j++) {
+        for (let i = 0; i < coluna_qtd; i++) {
+          let x = x_inicial + i * modulo_tamanho;
+          let y = y_inicial + j * modulo_tamanho;
+
+          let cor_indice = floor(random(paleta_cores.length - 1));
+          fill(paleta_cores[cor_indice]);
+          rect(x, y, modulo_tamanho, modulo_tamanho);
+          fill(paleta_cores[(cor_indice + 1) % paleta_cores.length]);
+
+          let movimento = map(sin(frameCount * seno_escala + movimento_diferencial), -1, 1, 0, 1);
+
+          let seletor = floor(random(6 + 3));
+
+          if (seletor === 0) {
+            let raio_externo = modulo_tamanho / 2 - 5;
+            let raio_interno = raio_externo * movimento;
+            let pontas_qtd = [4, 6, 8, 10, 12, 14, 16, 18][floor(random() * 8)];
+            estrela(x + modulo_tamanho / 2, y + modulo_tamanho / 2, raio_interno, raio_externo, pontas_qtd, 0);
+          }
+
+          if (seletor === 1) {
+            let diametro = random(modulo_tamanho / 2, modulo_tamanho) * movimento;
+            circle(x + modulo_tamanho / 2, y + modulo_tamanho / 2, diametro);
+          }
+
+          if (seletor === 2) {
+            let pontas = [3, 5, 7, 9, 11, 13][floor(random(6))];
+            let pontas_altura = map(movimento, 0, 1, 0.2, 0.8);
+            coroa_dupla(x, y, modulo_tamanho, modulo_tamanho, pontas, pontas_altura);
+          }
+
+          if (seletor === 3) {
+            let haste_largura = map(movimento, 0, 1, 0.2, 0.8);
+            machado(x, y, modulo_tamanho, modulo_tamanho, haste_largura);
+          }
+
+          if (seletor === 4) {
+            let abertura_largura = random(0.4, 1) * movimento;
+            losango(x, y, modulo_tamanho, modulo_tamanho, abertura_largura);
+          }
+
+          if (seletor >= 5 && modulo_tamanho > 60) {
+            grade(x, y, 2, 2, modulo_tamanho);
+          }
+          movimento_diferencial += 1;
+        }
+      }
+    }
+
+    function estrela(x, y, raio_interno, raio_externo, pontas_qtd, angulo_inicial) {
+      let step = TWO_PI / pontas_qtd;
+      beginShape();
+      for (let i = 0; i < pontas_qtd; i++) {
+        let ang = angulo_inicial + step * i;
+        let interno_x = x + cos(ang) * raio_interno;
+        let interno_y = y + sin(ang) * raio_interno;
+        vertex(interno_x, interno_y);
+        let externo_x = x + cos(ang + step / 2.0) * raio_externo;
+        let externo_y = y + sin(ang + step / 2.0) * raio_externo;
+        vertex(externo_x, externo_y);
+      }
+      endShape(CLOSE);
+    }
+
+    function coroa_simples(x, y, largura, altura, pontas_qtd, pontas_altura_relativa) {
+      let pontas_altura = altura * pontas_altura_relativa;
+      let pontas_deslocamento = largura / (pontas_qtd - 1);
+      let ponta_x, ponta_y;
+      beginShape();
+      for (let i = 0; i < pontas_qtd; i++) {
+        ponta_x = x + i * pontas_deslocamento;
+        ponta_y = y;
+        if (i % 2 != 0) {
+          ponta_y = y + pontas_altura;
+        }
+        vertex(ponta_x, ponta_y);
+      }
+      vertex(x + largura, ponta_y + altura);
+      vertex(x, ponta_y + altura);
+      endShape(CLOSE);
+    }
+
+    function coroa_dupla(x, y, largura, altura, pontas_qtd, pontas_altura_relativa) {
+      let pontas_altura = altura * pontas_altura_relativa / 2;
+      let pontas_deslocamento = largura / (pontas_qtd - 1);
+      beginShape();
+      for (let i = 0; i < pontas_qtd; i++) {
+        let ponta_x = x + i * pontas_deslocamento;
+        let ponta_y = y;
+        if (i % 2 !== 0) {
+          ponta_y = y + pontas_altura;
+        }
+        vertex(ponta_x, ponta_y);
+      }
+      for (let i = 0; i < pontas_qtd; i++) {
+        let ponta_x = (x + largura) - (i * pontas_deslocamento);
+        let ponta_y = y + altura;
+        if (i % 2 !== 0) {
+          ponta_y = (y + altura) - pontas_altura;
+        }
+        vertex(ponta_x, ponta_y);
+      }
+      endShape(CLOSE);
+    }
+
+    function machado(x, y, largura, altura, haste_largura_relativa) {
+      let haste_largura = largura * haste_largura_relativa / 2;
+      beginShape();
+      vertex(x, y);
+      vertex(x + haste_largura, y + haste_largura);
+      vertex(x + haste_largura, y);
+      vertex(x + (largura - haste_largura), y);
+      vertex(x + (largura - haste_largura), y + haste_largura);
+      vertex(x + largura, y);
+      vertex(x + largura, y + altura);
+      vertex(x + (largura - haste_largura), y + (altura - haste_largura));
+      vertex(x + (largura - haste_largura), y + altura);
+      vertex(x + haste_largura, y + altura);
+      vertex(x + haste_largura, y + (altura - haste_largura));
+      vertex(x, y + altura);
+      endShape(CLOSE);
+    }
+
+    function losango(x, y, largura, altura, abertura_relativa) {
+      let abertura_largura = largura * abertura_relativa / 2;
+      beginShape();
+      vertex(x + abertura_largura, y + altura / 2);
+      vertex(x + largura / 2, y);
+      vertex(x + (largura - abertura_largura), y + altura / 2);
+      vertex(x + largura / 2, y + altura);
+      endShape(CLOSE);
+    }
+  </script>
+</body>
+</html>
